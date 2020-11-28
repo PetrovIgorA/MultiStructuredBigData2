@@ -1,0 +1,23 @@
+/**
+* Module for politic components of countries
+*/
+module politics;
+
+create view Countries as
+extract regex /Geography (\w+( \w+)?)/ on Doc.text
+	return group 1 as country
+from Document Doc;
+
+create view Capitals as
+extract regex /Capital: {1,}(\w+( \w+)?)/ on Doc.text
+	return group 1 as capital
+from Document Doc;
+
+create view Suffrages as
+extract regex /Suffrage: {1,}((\d{1,})|NA)/ on Doc.text
+	return group 1 as suffrage
+from Document Doc;
+
+export view Countries;
+export view Capitals;
+export view Suffrages;

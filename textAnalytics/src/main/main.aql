@@ -1,0 +1,37 @@
+/*
+	Main module: make result table
+*/
+module main; 
+
+import module geography;
+import module politics;
+import module society;
+
+create view Result as
+extract
+	pattern (<countries.country>) <Token>{1,70}
+			(<coordinates.all_coordinates>) <Token>{1,5}
+			(<parts.part>) <Token>{20, 120}
+			(<coastlines.coastline>) <Token>{50,600}
+			(<populations.population>) <Token>{5,100}
+			(<growth_rates.growth_rate>) <Token>{20, 500}
+			(<capitals.capital>) <Token>{20, 1000}
+			(<suffrages.suffrage>)
+	return	group 1 as country
+			and group 7 as capital
+			and group 2 as coordinates
+			and group 3 as part_of_the_world
+			and group 4 as coastline
+			and group 5 as population
+			and group 6 as growth_rate
+			and group 8 as suffrage
+from politics.Countries countries,
+	 politics.Capitals capitals,
+     geography.Coordinates coordinates,
+     geography.PartOfTheWorld parts,
+     geography.Coastlines coastlines,
+     society.Populations populations,
+     society.PopulationGrowthRates growth_rates,
+     politics.Suffrages suffrages;
+
+output view Result;

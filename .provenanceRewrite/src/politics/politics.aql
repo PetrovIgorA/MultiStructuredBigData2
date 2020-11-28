@@ -1,0 +1,63 @@
+module politics;
+
+
+create view Countries as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Geography (\w+( \w+)?)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as country
+
+  from
+    Document Doc;
+output view Countries;
+
+create view Capitals as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Capital: {1,}(\w+( \w+)?)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as capital
+
+  from
+    Document Doc;
+output view Capitals;
+
+create view Suffrages as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Suffrage: {1,}((\d{1,})|NA)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as suffrage
+
+  from
+    Document Doc;
+output view Suffrages;
+
+export view politics.Countries;
+
+
+export view politics.Capitals;
+
+
+export view politics.Suffrages;
+
+

@@ -1,0 +1,17 @@
+/**
+* Module for social components of countries
+*/
+module society; 
+
+create view Populations as
+extract regex /Population: {1,}((\d{1,}(,\d{1,})*)|uninhabited)/ on Doc.text
+	return group 1 as population
+from Document Doc;
+
+create view PopulationGrowthRates as
+extract regex /Population growth rate: {1,}((\d{1,}.\d{1,}%)|NA)/ on Doc.text
+	return group 1 as growth_rate
+from Document Doc;
+
+export view Populations;
+export view PopulationGrowthRates;

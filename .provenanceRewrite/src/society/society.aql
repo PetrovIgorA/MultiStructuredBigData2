@@ -1,0 +1,43 @@
+module society;
+
+
+create view Populations as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Population: {1,}((\d{1,}(,\d{1,})*)|uninhabited)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as population
+
+  from
+    Document Doc;
+output view Populations;
+
+create view PopulationGrowthRates as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Population growth rate: {1,}((\d{1,}.\d{1,}%)|NA)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as growth_rate
+
+  from
+    Document Doc;
+output view PopulationGrowthRates;
+
+export view society.Populations;
+
+
+export view society.PopulationGrowthRates;
+
+

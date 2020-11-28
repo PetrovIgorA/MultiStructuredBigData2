@@ -1,0 +1,6 @@
+# Local files
+.settings
+bin/
+
+# Unused folders
+result

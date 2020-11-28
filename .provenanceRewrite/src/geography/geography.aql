@@ -1,0 +1,67 @@
+module geography;
+
+
+create view Coordinates as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Geographic coordinates: {1,}((\d{1,3} \d{1,3} [NS]), (\d{1,3} \d{1,3} [WE]))/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as all_coordinates
+
+    and group 2 as latitude
+
+    and group 3 as longitude
+
+  from
+    Document Doc;
+output view Coordinates;
+
+create view PartOfTheWorld as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Map references: {1,}(\w+( \w+)?)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as part
+
+  from
+    Document Doc;
+output view PartOfTheWorld;
+
+create view Coastlines as
+  extract
+    AutoID() as __auto__id,
+    'STMT_TYPE_EXTRACT_REGEX' as __stmt__type,
+    -1 as Document_____sep_____Doc____id,
+    regex
+      /Coastline: {1,}(\d{1,}([.,]\d{1,})* km)/
+    with flags 
+      'DOTALL'
+    on Doc.text
+    return
+    group 1 as coastline
+
+  from
+    Document Doc;
+output view Coastlines;
+
+export view geography.Coordinates;
+
+
+export view geography.PartOfTheWorld;
+
+
+export view geography.Coastlines;
+
+
